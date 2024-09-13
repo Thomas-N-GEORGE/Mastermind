@@ -1,4 +1,4 @@
-// Try to design a Mastermind peg component.
+// A Mastermind peg component.
 import { useState, useContext } from "react";
 import { GameContext } from "../context/GameContext";
 

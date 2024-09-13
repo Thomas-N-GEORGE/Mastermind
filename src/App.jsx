@@ -1,6 +1,6 @@
-import { GameContextProvider } from "./context/GameContextProvider";
+import { GameContextProvider } from "./context/GameContext";
 import Peg from "./components/Peg";
-import Hole from "./components/Hole";
+import Row from "./components/Row";
 
 function App() {
   return (
@@ -12,9 +12,9 @@ function App() {
         <Peg color="red" />
       </div>
       <p>-</p>
-      {/* Adding a hole inside a parent div: */}
+      {/* Adding a row inside a parent div: */}
       <div>
-        <Hole />
+        <Row />
       </div>
     </GameContextProvider>
   );
