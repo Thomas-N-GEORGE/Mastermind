@@ -9,17 +9,17 @@ const Hole = (props) => {
   const { setDraggedPeg, draggedPegColor, activeRow, setActiveRow } =
     useContext(GameContext);
 
-  function handleUpdateRow(newColor, index) {
-    const updatedRow = activeRow.map((color, i) => {
-      if (i === index) {
-        // Update color
+  function handleUpdateRow(newColor, id) {
+    const updatedRow = activeRow.content.map((color, i) => {
+      if (i === id) {
+        // Update color.
         return newColor;
       } else {
-        // The rest haven't changed
+        // The rest haven't changed.
         return color;
       }
     });
-    setActiveRow(updatedRow);
+    setActiveRow({...activeRow, content:updatedRow});
   }
 
   return (
@@ -27,24 +27,29 @@ const Hole = (props) => {
       <span
         style={{
           ...holeStyle,
-          border: isDraggedOver ? "dashed red 3px" : "dashed black 3px",
+          border: isDraggedOver ? "solid red 3px" : "dashed black 3px",
         }}
-        onDragEnter={() => setIsDraggedOver(true)}
+        // Drag and drop API.
+        onDragEnter={() => setIsDraggedOver(props.isActive)}
         onDragLeave={() => setIsDraggedOver(false)}
         onDragOver={(e) => {
-          e.preventDefault();
+          if (props.isActive) {
+            e.preventDefault();
+          }
         }}
         onDrop={() => {
-          setMyPeg(<Peg color={draggedPegColor} />);
-          console.log(
-            "draggedPegColor:",
-            draggedPegColor,
-            "on hole n° ",
-            props.id
-          );
-          handleUpdateRow(draggedPegColor, props.id - 1);
-          setDraggedPeg(null);
-          setIsDraggedOver(false);
+          if (props.isActive) {
+            setMyPeg(<Peg color={draggedPegColor} />);
+            console.log(
+              "draggedPegColor:",
+              draggedPegColor,
+              "on hole n° ",
+              props.id
+            );
+            handleUpdateRow(draggedPegColor, props.id);
+            setDraggedPeg(null);
+            setIsDraggedOver(false);
+          }
         }}
       >
         {myPeg}

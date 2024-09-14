@@ -5,14 +5,18 @@ import { useState, createContext } from "react";
 
 export const GameContext = createContext();
 
+let initialRowId = 0;
 let initialRow = [null, null, null, null, null, null];
 
 export const GameContextProvider = (props) => {
   // State goes here.
   const [draggedPeg, setDraggedPeg] = useState(null);
   const [draggedPegColor, setDraggedPegColor] = useState(null);
-  const [activeRow, setActiveRow] = useState(initialRow);
-  
+  const [activeRow, setActiveRow] = useState({
+    id: initialRowId,
+    content: initialRow,
+  });
+
   return (
     <GameContext.Provider
       value={{

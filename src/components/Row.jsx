@@ -5,26 +5,27 @@ import { useContext, useEffect } from "react";
 import { GameContext } from "../context/GameContext";
 import Hole from "./Hole";
 
-const Row = () => {
+const Row = (props) => {
   const { activeRow } = useContext(GameContext);
-  
+
+  const holes = [0, 1, 2, 3, 4, 5];
+
+  // Logging.
   useEffect(() => {
-    console.log(activeRow);
-}, [activeRow]);
+    if (activeRow.id === props.id) console.log(activeRow);
+  }, [activeRow, props.id]);
 
   return (
     <>
       <span
         style={{
           ...rowStyle,
+          border: props.isActive ? "3px solid black" : "1px solid black",
         }}
       >
-        <Hole id={1} />
-        <Hole id={2} />
-        <Hole id={3} />
-        <Hole id={4} />
-        <Hole id={5} />
-        <Hole id={6} />
+        {holes.map((hole, i) => (
+          <Hole key={i} id={hole} isActive={props.isActive} />
+        ))}
       </span>
     </>
   );

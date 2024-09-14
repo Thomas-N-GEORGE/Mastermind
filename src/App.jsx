@@ -1,6 +1,7 @@
 import { GameContextProvider } from "./context/GameContext";
 import Peg from "./components/Peg";
-import Row from "./components/Row";
+// import Row from "./components/row";
+import BoardRow from "./components/BoardRows";
 
 function App() {
   return (
@@ -10,11 +11,13 @@ function App() {
         <Peg color="blue" />
         <span>------</span>
         <Peg color="red" />
+        <span>------</span>
+        <Peg color="green" />
       </div>
       <p>-</p>
       {/* Adding a row inside a parent div: */}
       <div>
-        <Row />
+        <BoardRow />
       </div>
     </GameContextProvider>
   );
