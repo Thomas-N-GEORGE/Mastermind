@@ -4,22 +4,75 @@ import { GameContext } from "../context/GameContext";
 import Peg from "./Peg";
 
 const Hole = (props) => {
-  const [myPeg, setMyPeg] = useState(null);
+  const [childPeg, setChildPeg] = useState(null);
   const [isDraggedOver, setIsDraggedOver] = useState(false);
-  const { setDraggedPeg, draggedPegColor, activeRow, setActiveRow } =
+  const { draggedPeg, setDraggedPeg, activeRow, setActiveRow } =
     useContext(GameContext);
 
-  function handleUpdateRow(newColor, id) {
-    const updatedRow = activeRow.content.map((color, i) => {
+  function handleUpdateRow(pegColor, pegIsInActiveRow, id) {
+    const newPeg = {
+      color: pegColor,
+      isInActiveRow: pegIsInActiveRow,
+      id: id,
+    };
+    console.log("HandleUpdateRow, peg = ", newPeg);
+    const updatedRow = activeRow.content.map((peg, i) => {
       if (i === id) {
-        // Update color.
-        return newColor;
+        // Update peg.
+        console.log("newPeg id:", i, "newPeg:", newPeg);
+        return newPeg;
       } else {
         // The rest haven't changed.
-        return color;
+        console.log("unchangedPeg id:", i, "peg:", peg);
+        return peg;
       }
     });
-    setActiveRow({...activeRow, content:updatedRow});
+    console.log("updatedRow = ", updatedRow);
+    setActiveRow({ ...activeRow, content: updatedRow });
+  }
+
+  function handleDroppedPeg(color, isInActiveRow, sourceId, id) {
+    if (childPeg == null || !isInActiveRow) {
+      // Setting pegs.
+      console.log(
+        "Setting peg",
+        color,
+        isInActiveRow,
+        sourceId,
+        id
+      );
+      setHoleChildPeg(color, true, id);
+			handleUpdateRow(color, true, id);
+    } else {
+			// Swapping pegs.
+      // Source hole receives actual childPeg color.
+      console.log(
+				"Swapping pegs",
+        activeRow.content[id].color,
+        true,
+        activeRow.content[sourceId].id
+      );
+      handleUpdateRow(
+				activeRow.content[id].color,
+        true,
+        activeRow.content[sourceId].id
+      );
+      // And this hole receives incoming color.
+      // handleUpdateRow(color, true, id);
+			setHoleChildPeg(color, true, id);
+    }
+    setDraggedPeg(null);
+    setIsDraggedOver(false);
+  }
+
+  function setHoleChildPeg(color, isInActiveRow, id) {
+    setChildPeg(
+      <Peg color={color} isInActiveRow={isInActiveRow} id={id} />
+    );
+  }
+
+  function suppressChildPeg() {
+    setChildPeg(null);
   }
 
   return (
@@ -35,24 +88,19 @@ const Hole = (props) => {
         onDragOver={(e) => {
           if (props.isActive) {
             e.preventDefault();
+            setIsDraggedOver(true);
           }
         }}
         onDrop={() => {
-          if (props.isActive) {
-            setMyPeg(<Peg color={draggedPegColor} />);
-            console.log(
-              "draggedPegColor:",
-              draggedPegColor,
-              "on hole n° ",
-              props.id
-            );
-            handleUpdateRow(draggedPegColor, props.id);
-            setDraggedPeg(null);
-            setIsDraggedOver(false);
-          }
+          handleDroppedPeg(
+            draggedPeg.color,
+            draggedPeg.isInActiveRow,
+            draggedPeg.id,
+            props.id
+          );
         }}
       >
-        {myPeg}
+        {childPeg}
       </span>
     </>
   );

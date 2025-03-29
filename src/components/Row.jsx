@@ -6,14 +6,15 @@ import { GameContext } from "../context/GameContext";
 import Hole from "./Hole";
 
 const Row = (props) => {
-  const { activeRow } = useContext(GameContext);
-
-  const holes = [0, 1, 2, 3, 4, 5];
+  const { board } = useContext(GameContext);
+  const pegList = board[props.rowId].rowContent.map((hole, index) => {
+    return <Hole key={index} isActive={props.isActive} holeId={hole.holeId} />;
+  });
 
   // Logging.
   useEffect(() => {
-    if (activeRow.id === props.id) console.log(activeRow);
-  }, [activeRow, props.id]);
+    if (props.isActive) console.log("active row id =", props.rowId, "\nboard =", board);
+  }, [props.isActive, props.rowId, board]);
 
   return (
     <>
@@ -23,9 +24,7 @@ const Row = (props) => {
           border: props.isActive ? "3px solid black" : "1px solid black",
         }}
       >
-        {holes.map((hole, i) => (
-          <Hole key={i} id={hole} isActive={props.isActive} />
-        ))}
+        {pegList}
       </span>
     </>
   );

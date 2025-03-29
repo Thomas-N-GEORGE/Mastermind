@@ -4,18 +4,34 @@ import { GameContext } from "../context/GameContext";
 
 const Peg = (props) => {
   const [draggable, setDraggable] = useState(true);
-  const { setDraggedPegColor } = useContext(GameContext);
+//   const [isInActiveRow, setIsInActiveRow] = useState(false);
+  const { setDraggedPeg } = useContext(GameContext);
+  const thisPeg = {
+    color: props.color,
+    isInActiveRow: props.isInActiveRow,
+    id: props.id,
+  };
 
   return (
     <span
       onClick={() => {
         setDraggable(!draggable);
-        // setMeInContext();
-        // setDraggedPeg(<Peg />)
       }}
       draggable={draggable}
-      onDragStart={() => {setDraggedPegColor(props.color)}}
-      style={{ ...pegStyle, backgroundColor: props.color, cursor: draggable ? "move" : "pointer" }}
+      onDragStart={() => {
+        setDraggedPeg(thisPeg);
+      }}
+      onDragEnd={() => {
+        // If isInActiveRow dragged out of active row, 
+				// suppress peg and leave the hole blank. How do we do this ?
+				// if (props.isInActiveRow && props.id == null) {}
+        }
+      }
+      style={{
+        ...pegStyle,
+        backgroundColor: props.color,
+        cursor: draggable ? "move" : "pointer",
+      }}
     ></span>
   );
 };
