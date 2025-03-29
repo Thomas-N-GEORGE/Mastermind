@@ -10,12 +10,14 @@ const Board = () => {
 
   const rowList = board.map((row, index) => {
     return (
-      <Row
-        key={index}
-        rowId={row.rowId}
-        isActive={row.isActive}
-        content={row.rowContent}
-      />
+      <div key={index}>
+        <Row
+          key={index}
+          rowId={row.rowId}
+          isActive={row.isActive}
+          content={row.rowContent}
+        />
+      </div>
     );
   });
 

@@ -5,41 +5,37 @@ import { useState, createContext } from "react";
 
 export const GameContext = createContext();
 
-// const initialRowId = 0;
-// const initialRow = [null, null, null, null, null, null];
+const initialActiveRowId = 9;
 
-const intialPeg = {
-    color: null
-}
+// const intialPeg = {
+//     position: null,
+//     color: null,
+//     isInActiveRow: false
+// }
 
 const holeIds = [0, 1, 2, 3, 4, 5];
-const initialRow = Array.from(holeIds, (id) => (
+const initialRow = Array.from(holeIds, (holeId) => (
     {
-        holeId: id,
-        holeContent: intialPeg
+        holeId: holeId,
+        holeContent: null
     }
 ))
 
-const rowIds = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
+const rowIds = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 const initialBoard = Array.from(rowIds, (rowId) => (
     {
         rowId: rowId,
-        isActive: rowId !== 0 ? false:true,
+        isActive: rowId !== initialActiveRowId ? false:true,
         rowContent: initialRow
     }
 ));
 
 export const GameContextProvider = (props) => {
   // State goes here.
-  // TODO : Represent part of or the whole game here,
-  //    so that we can simply access state everywhere.
   const [activePeg, setActivePeg] = useState(null);
   const [draggedPeg, setDraggedPeg] = useState(null);
   const [sourceHole, setSourceHole] = useState(null);
-//   const [activeRow, setActiveRow] = useState({
-//     id: initialRowId,
-//     content: initialRow,
-//   });
+  const [activeRowId, setActiveRowId] = useState(initialActiveRowId);
   const [board, setBoard] = useState(initialBoard);
 
   return (
@@ -51,8 +47,8 @@ export const GameContextProvider = (props) => {
         setDraggedPeg,
         sourceHole,
         setSourceHole,
-        // activeRow,
-        // setActiveRow,
+        activeRowId, 
+        setActiveRowId,
         board, 
         setBoard
       }}

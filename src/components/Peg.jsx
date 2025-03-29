@@ -7,9 +7,9 @@ const Peg = (props) => {
 //   const [isInActiveRow, setIsInActiveRow] = useState(false);
   const { setDraggedPeg } = useContext(GameContext);
   const thisPeg = {
+    position: props.position,
     color: props.color,
     isInActiveRow: props.isInActiveRow,
-    id: props.id,
   };
 
   return (

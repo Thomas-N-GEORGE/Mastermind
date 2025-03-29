@@ -5,7 +5,7 @@ import Board from "./components/Board";
 function App() {
   return (
     <GameContextProvider>
-      {/* Adding a peg inside a parent div: */}
+      {/* Adding pegs inside a parent div: */}
       <div>
         <Peg color="blue" isInActiveRow={false} id={null} />
         <span>------</span>
@@ -14,7 +14,7 @@ function App() {
         <Peg color="green" isInActiveRow={false} id={null} />
       </div>
       <p>-</p>
-      {/* Adding a row inside a parent div: */}
+      {/* Adding the board inside a parent div: */}
       <div>
         <Board />
       </div>

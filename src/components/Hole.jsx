@@ -4,75 +4,112 @@ import { GameContext } from "../context/GameContext";
 import Peg from "./Peg";
 
 const Hole = (props) => {
-  const [childPeg, setChildPeg] = useState(null);
   const [isDraggedOver, setIsDraggedOver] = useState(false);
-  const { draggedPeg, setDraggedPeg, activeRow, setActiveRow } =
+  const { draggedPeg, setDraggedPeg, activeRowId, board, setBoard } =
     useContext(GameContext);
+  const renderedPeg =
+    props.holeContent !== null ? (
+      <Peg
+        position={props.holeId}
+        color={props.holeContent.color}
+        isInActiveRow={props.isActive}
+      />
+    ) : null;
 
-  function handleUpdateRow(pegColor, pegIsInActiveRow, id) {
-    const newPeg = {
-      color: pegColor,
-      isInActiveRow: pegIsInActiveRow,
-      id: id,
-    };
-    console.log("HandleUpdateRow, peg = ", newPeg);
-    const updatedRow = activeRow.content.map((peg, i) => {
-      if (i === id) {
-        // Update peg.
-        console.log("newPeg id:", i, "newPeg:", newPeg);
-        return newPeg;
-      } else {
-        // The rest haven't changed.
-        console.log("unchangedPeg id:", i, "peg:", peg);
-        return peg;
+  function handleUpdateBoard(targetRow, updatedRowContent) {
+    // Board update.
+    const updatedBoard = board.map((row, index) => {
+      if (index === activeRowId) {
+        // Update row.
+        return { ...targetRow, rowContent: updatedRowContent };
       }
+      // The rest haven't changed.
+      return row;
     });
-    console.log("updatedRow = ", updatedRow);
-    setActiveRow({ ...activeRow, content: updatedRow });
+    setBoard(updatedBoard);
   }
 
-  function handleDroppedPeg(color, isInActiveRow, sourceId, id) {
-    if (childPeg == null || !isInActiveRow) {
-      // Setting pegs.
-      console.log(
-        "Setting peg",
-        color,
-        isInActiveRow,
-        sourceId,
-        id
-      );
-      setHoleChildPeg(color, true, id);
-			handleUpdateRow(color, true, id);
+  function handleSetPeg(pegPosition, pegColor, pegIsInActiveRow) {
+    const newPeg = {
+      position: pegPosition,
+      color: pegColor,
+      isInActiveRow: pegIsInActiveRow,
+    };
+
+    // Row update.
+    const targetRow = board[activeRowId];
+    const updatedRowContent = targetRow.rowContent.map((hole, index) => {
+      if (index === pegPosition) {
+        // Update peg.
+        return { ...hole, holeContent: newPeg };
+      } else {
+        // The rest haven't changed.
+        return hole;
+      }
+    });
+
+    handleUpdateBoard(targetRow, updatedRowContent);
+  }
+
+  function handleSwapPegs(
+    sourcePegPosition,
+    sourcePegColor,
+    sourcePegIsInActiveRow,
+    currentPegPosition,
+    currentPegColor,
+    currentPegIsInActiveRow
+  ) {
+    const sourcePeg = {
+      position: sourcePegPosition,
+      color: currentPegColor,
+      isInActiveRow: currentPegIsInActiveRow,
+    };
+    const targetPeg = {
+      position: currentPegPosition,
+      color: sourcePegColor,
+      isInActiveRow: sourcePegIsInActiveRow,
+    };
+
+    // Row update.
+    const targetRow = board[activeRowId];
+    const updatedRowContent = targetRow.rowContent.map((hole, index) => {
+      if (index === sourcePegPosition) {
+        // Update source peg.
+        return { ...hole, holeContent: sourcePeg };
+      }
+      if (index === currentPegPosition) {
+        // Update target peg.
+        return { ...hole, holeContent: targetPeg };
+      }
+      // The rest haven't changed.
+      return hole;
+    });
+
+    handleUpdateBoard(targetRow, updatedRowContent);
+  }
+
+  function handleDroppedPeg(
+    sourcePegPosition,
+    sourcePegColor,
+    sourcePegIsInActiveRow,
+    currentPosition
+  ) {
+    if (props.holeContent == null || !sourcePegIsInActiveRow) {
+      // Set pegs.
+      handleSetPeg(currentPosition, sourcePegColor, true);
     } else {
-			// Swapping pegs.
-      // Source hole receives actual childPeg color.
-      console.log(
-				"Swapping pegs",
-        activeRow.content[id].color,
-        true,
-        activeRow.content[sourceId].id
+      // Swap pegs.
+      handleSwapPegs(
+        sourcePegPosition,
+        sourcePegColor,
+        sourcePegIsInActiveRow,
+        currentPosition,
+        props.holeContent.color,
+        props.holeContent.isInActiveRow
       );
-      handleUpdateRow(
-				activeRow.content[id].color,
-        true,
-        activeRow.content[sourceId].id
-      );
-      // And this hole receives incoming color.
-      // handleUpdateRow(color, true, id);
-			setHoleChildPeg(color, true, id);
     }
     setDraggedPeg(null);
     setIsDraggedOver(false);
-  }
-
-  function setHoleChildPeg(color, isInActiveRow, id) {
-    setChildPeg(
-      <Peg color={color} isInActiveRow={isInActiveRow} id={id} />
-    );
-  }
-
-  function suppressChildPeg() {
-    setChildPeg(null);
   }
 
   return (
@@ -93,14 +130,14 @@ const Hole = (props) => {
         }}
         onDrop={() => {
           handleDroppedPeg(
+            draggedPeg.position,
             draggedPeg.color,
             draggedPeg.isInActiveRow,
-            draggedPeg.id,
-            props.id
+            props.holeId
           );
         }}
       >
-        {childPeg}
+        {renderedPeg}
       </span>
     </>
   );
