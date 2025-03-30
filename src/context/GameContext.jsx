@@ -5,22 +5,15 @@ import { useState, createContext } from "react";
 
 export const GameContext = createContext();
 
-const initialActiveRowId = 9;
-
-// const intialPeg = {
-//     position: null,
-//     color: null,
-//     isInActiveRow: false
-// }
-
 const holeIds = [0, 1, 2, 3, 4, 5];
 const initialRow = Array.from(holeIds, (holeId) => (
-    {
-        holeId: holeId,
-        holeContent: null
-    }
+  {
+    holeId: holeId,
+    holeContent: null
+  }
 ))
 
+const initialActiveRowId = 9;
 const rowIds = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 const initialBoard = Array.from(rowIds, (rowId) => (
     {
