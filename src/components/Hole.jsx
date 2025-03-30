@@ -2,6 +2,7 @@
 import { useState, useContext } from "react";
 import { GameContext } from "../context/GameContext";
 import Peg from "./Peg";
+import { updateBoardHelper, setPegHelper, swapPegsHelper } from "../helpers";
 
 const Hole = (props) => {
   const [isDraggedOver, setIsDraggedOver] = useState(false);
@@ -16,39 +17,17 @@ const Hole = (props) => {
       />
     ) : null;
 
-  function handleUpdateBoard(targetRow, updatedRowContent) {
-    // Board update.
-    const updatedBoard = board.map((row, index) => {
-      if (index === activeRowId) {
-        // Update row.
-        return { ...targetRow, rowContent: updatedRowContent };
-      }
-      // The rest haven't changed.
-      return row;
-    });
-    setBoard(updatedBoard);
-  }
-
   function handleSetPeg(pegPosition, pegColor, pegIsInActiveRow) {
-    const newPeg = {
-      position: pegPosition,
-      color: pegColor,
-      isInActiveRow: pegIsInActiveRow,
-    };
-
-    // Row update.
+    const updatedRowContent = setPegHelper(
+      board,
+      activeRowId,
+      pegPosition,
+      pegColor,
+      pegIsInActiveRow
+    );
     const targetRow = board[activeRowId];
-    const updatedRowContent = targetRow.rowContent.map((hole, index) => {
-      if (index === pegPosition) {
-        // Update peg.
-        return { ...hole, holeContent: newPeg };
-      } else {
-        // The rest haven't changed.
-        return hole;
-      }
-    });
-
-    handleUpdateBoard(targetRow, updatedRowContent);
+    const updatedBoard = updateBoardHelper(board, targetRow, updatedRowContent);
+    setBoard(updatedBoard);
   }
 
   function handleSwapPegs(
@@ -59,33 +38,19 @@ const Hole = (props) => {
     currentPegColor,
     currentPegIsInActiveRow
   ) {
-    const sourcePeg = {
-      position: sourcePegPosition,
-      color: currentPegColor,
-      isInActiveRow: currentPegIsInActiveRow,
-    };
-    const targetPeg = {
-      position: currentPegPosition,
-      color: sourcePegColor,
-      isInActiveRow: sourcePegIsInActiveRow,
-    };
-
-    // Row update.
+    const updatedRowContent = swapPegsHelper(
+      board,
+      activeRowId,
+      sourcePegPosition,
+      sourcePegColor,
+      sourcePegIsInActiveRow,
+      currentPegPosition,
+      currentPegColor,
+      currentPegIsInActiveRow
+    );
     const targetRow = board[activeRowId];
-    const updatedRowContent = targetRow.rowContent.map((hole, index) => {
-      if (index === sourcePegPosition) {
-        // Update source peg.
-        return { ...hole, holeContent: sourcePeg };
-      }
-      if (index === currentPegPosition) {
-        // Update target peg.
-        return { ...hole, holeContent: targetPeg };
-      }
-      // The rest haven't changed.
-      return hole;
-    });
-
-    handleUpdateBoard(targetRow, updatedRowContent);
+    const updatedBoard = updateBoardHelper(board, targetRow, updatedRowContent);
+    setBoard(updatedBoard);
   }
 
   function handleDroppedPeg(
