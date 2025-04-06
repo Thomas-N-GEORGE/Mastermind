@@ -1,6 +1,6 @@
 // A Mastermind peg component.
 import { useContext } from "react";
-import { GameContext } from "../context/GameContext";
+import { GameContext } from "../../context/GameContext";
 
 const Peg = (props) => {
   const { activeRowId, board, setBoard, draggedPeg, setDraggedPeg } =

@@ -1,5 +1,6 @@
 // Helper functions.
-
+// It must be possible to reduce drastically the complexity of these...
+// Check handleDeletePeg in Peg.js for exapmle !
 
 /**
  * Updates a specific row in the game board with new content.

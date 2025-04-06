@@ -1,8 +1,8 @@
 // Mastermind hole component.
 import { useState, useContext } from "react";
-import { GameContext } from "../context/GameContext";
-import Peg from "./Peg";
-import { updateBoardHelper, setPegHelper, swapPegsHelper } from "../helpers";
+import { GameContext } from "../../context/GameContext";
+import Peg from "../Peg/Peg";
+import { updateBoardHelper, setPegHelper, swapPegsHelper } from "./helpers";
 
 const Hole = (props) => {
   const [isDraggedOver, setIsDraggedOver] = useState(false);

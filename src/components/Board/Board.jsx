@@ -2,8 +2,8 @@
 
 // Mastermind board of rows component.
 import { useContext } from "react";
-import { GameContext } from "../context/GameContext";
-import Row from "./Row";
+import { GameContext } from "../../context/GameContext";
+import Row from "../Row/Row";
 
 const Board = () => {
   const { board } = useContext(GameContext);

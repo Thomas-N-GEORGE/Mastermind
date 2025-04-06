@@ -22,6 +22,24 @@ const initialBoard = Array.from(rowIds, (rowId) => (
         rowContent: initialRow
     }
 ));
+const initialEvalBoard = Array.from(rowIds, (rowId) => (
+  {
+      rowId: rowId,
+      // isActive: rowId !== initialActiveRowId ? false:true,
+      rowContent: initialRow
+  }
+));
+
+const palette = [
+  "blue",
+  "red",
+  "green",
+  "orange",
+  "black",
+  "brown",
+  "lightGreen",
+  "lightBlue"
+]
 
 export const GameContextProvider = (props) => {
   // State goes here.
@@ -30,6 +48,9 @@ export const GameContextProvider = (props) => {
   const [sourceHole, setSourceHole] = useState(null);
   const [activeRowId, setActiveRowId] = useState(initialActiveRowId);
   const [board, setBoard] = useState(initialBoard);
+  const [evalBoard, setEvalBoard] = useState(initialEvalBoard);
+  const [availableColors, setAvailableColors] = useState(palette);
+  const [solution, setSolution] = useState(null);
 
   return (
     <GameContext.Provider
@@ -43,7 +64,12 @@ export const GameContextProvider = (props) => {
         activeRowId, 
         setActiveRowId,
         board, 
-        setBoard
+        setBoard,
+        evalBoard, 
+        setEvalBoard,
+        availableColors,
+        solution, 
+        setSolution
       }}
     >
       {props.children}

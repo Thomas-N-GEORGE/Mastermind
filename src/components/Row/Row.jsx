@@ -2,8 +2,8 @@
 
 // Mastermind row component.
 import { useContext, useEffect } from "react";
-import { GameContext } from "../context/GameContext";
-import Hole from "./Hole";
+import { GameContext } from "../../context/GameContext";
+import Hole from "../Hole/Hole";
 
 const Row = (props) => {
   const { board } = useContext(GameContext);
